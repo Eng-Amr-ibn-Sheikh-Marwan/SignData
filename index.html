@@ -462,7 +462,8 @@
             message1.style.display = 'none';
             overlay.style.display = 'none';
         }
-            fetch('https://eng-amr-ibn-sheikh-marwan.github.io/SignData/data-1', {
+// إرسال بيانات إلى الخادم
+fetch('https://my-server.herokuapp.com/save-data', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key: 'value' })
