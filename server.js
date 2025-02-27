@@ -1,9 +1,11 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Middleware لتحليل JSON
+// Middleware لتحليل JSON ودعم CORS
 app.use(express.json());
+app.use(cors());
 
 // تخزين البيانات
 let sharedData = null;
@@ -21,5 +23,5 @@ app.get('/get-data', (req, res) => {
 
 // تشغيل الخادم
 app.listen(port, () => {
-    console.log(`الخادم يعمل على https://eng-amr-ibn-sheikh-marwan.github.io/SignData/`);
+    console.log(`الخادم يعمل على المنفذ ${port}`);
 });
