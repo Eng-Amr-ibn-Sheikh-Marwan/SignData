@@ -436,6 +436,9 @@
         const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
         maxRegistrationsInput.value = maxRegistrations;
     };
+    fetch('http://localhost:3000/get-data')
+    .then(response => response.json())
+    .then(data => console.log(data));
 </script>
 </body>
 </html>
