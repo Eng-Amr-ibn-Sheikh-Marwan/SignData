@@ -436,7 +436,8 @@
         const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
         maxRegistrationsInput.value = maxRegistrations;
     };
-    fetch('https://eng-amr-ibn-sheikh-marwan.github.io/SignData/')
+// جلب البيانات من الخادم
+fetch('https://my-server.herokuapp.com/get-data')
     .then(response => response.json())
     .then(data => console.log(data));
 </script>
