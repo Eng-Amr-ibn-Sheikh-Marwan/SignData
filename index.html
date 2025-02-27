@@ -276,7 +276,6 @@
         const data = JSON.parse(localStorage.getItem('data') || '[]');
         const userEmail = localStorage.getItem('userEmail');
         const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
-        if (userEmail.length > 0) {
         if (maxRegistrations != "") {
             if (data.length < maxRegistrations) {
                 function checkLength(input, maxLength) {
