@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            direction: rtl;
+        }
+.overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+}
+#message {
+        display: none;
+        position: fixed;
+        width: 80%; /* تكبير عرض النافذة المنبثقة */
+        max-width: 800px; /* تحديد أقصى عرض */
+        padding: 20px; /* تقليل الحشو */
+        border-radius: 10px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+}
+        #message table {
+            width: 100%;
+            font-size: 18px; /* تكبير حجم الخط */
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #message img {
+          width: 100px; /* تكبير حجم الصورة */
+          height: 100px;
+        }
+        #message th, #message td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        #message th {
+            background-color: #007bff;
+            color: white;
+        }
+        #message button {
+            background: #2da62d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        input {
+          width: 20%;
+          padding: 5px;
+          box-sizing: border-box;
+          border-radius: 5px;
+          border: 1px solid #ddd;
+          outline: none;
+          transition: 0.3s;
+        }
+        input:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        }
+        #a button {
+          background: linear-gradient(to right, #007bff, #0056b3);
+          color: white;
+          border: none;
+          margin: 0 10px 0 0;
+          padding: 10px 20px;
+          border-radius: 25px;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+        #a {
+          }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    th, td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+    .control button {
+      padding: 5px 10px;
+      margin: 2px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      flex-wrap: wrap;
+    }
+    #aa {
+      width:;
+      padding: 8px;
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      outline: none;
+      transition: 0.3s;
+    }
+    #aa:hover {
+      border-color: #007bff;
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+    }
+    .tanbeh p {
+      color: red;
+    }
+    </style>
+</head>
+<body>
+<div id="a">
+    <input type="number" id="maxRegistrationsInput" placeholder="عدد المسجلين المطلوب" required>
+    <button onclick="setMaxRegistrations()">تعيين</button>
+    <input type="text" id="barcodeInput" placeholder="ادخل الباركود هنا" required>
+    <input type="number" id="idInput" placeholder="ادخل الرقم القومى هنا" oninput="checkLength(this, 14)" required>
+        <button onclick="searchID()">بحث</button>
+</div>
+<div class="tanbeh">
+  <p>*لن يتم فتح التسجيل الا عند وضع عدد محدد للتسجيل.</p>
+  <p></p>
+  <p></p>
+</div>
+<h2>المسجلين</h2>
+<h3 id="numberData"></h3>
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>التحكم</th>
+            <th>الباركود</th>
+            <th>الصورة الشخصية</th>
+            <th>email</th>
+            <th>الاسم</th>
+            <th>الرقم القومى</th>
+            <th>رقم التليفون</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- البيانات ستظهر هنا -->
+    </tbody>
+</table>
+<div id="message">
+    <table>
+        <thead>
+            <tr>
+                <th>الصورة الشخصية</th>
+                <th colspan="3">email</th>
+            </tr>
+            <tr>
+                <td><img id="profileImage" src="" alt="Profile" width="50"></td>
+                <td colspan="2" id="emailData"></td>
+            </tr>
+            <tr>
+                <th>الاسم</th>
+                <th>الرقم القومى</th>
+                <th>رقم التليفون</th>
+            </tr>
+            <tr>
+                <td id="profileName"></td>
+                <td id="idData"></td>
+                <td id="phoneData"></td>
+            </tr>
+            <tr>
+                <th colspan="4">الحالات</th>
+            </tr>
+            <tr>
+                <td id="status1"></td>
+                <td id="status2"></td>
+                <td id="status3"></td>
+            </tr>
+        </thead>
+    </table>
+    <button id="aaa">دخل القاعة</button>
+    <button class="close" onclick="Close()">إغلاق</button>
+</div>
+<div class="overlay" id="overlay"></div>
+<script>
+  const data = JSON.parse(localStorage.getItem('data') || '[]');
+  const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
+  document.getElementById("numberData").textContent = "عدد المسجلين: " + data.length;
+    function setMaxRegistrations() {
+        const maxRegistrations = document.getElementById('maxRegistrationsInput').value;
+        localStorage.setItem('maxRegistrations', maxRegistrations);
+        alert(`تم تعيين الحد الأقصى للمسجلين إلى ${maxRegistrations}`);
+        maxRegistrationsInput.value = maxRegistrations;
+    }
+    function checkLength(input, maxLength) {
+      if (input.value.length > maxLength) {
+        input.value = input.value.slice(0, maxLength);
+      }
+    }
+    function Close() {
+        message.style.display = 'none';
+        overlay.style.display = 'none';
+        barcodeInput.value = "";
+        barcodeInput.click();
+    }
+
+    function loadData() {
+        const data = JSON.parse(localStorage.getItem('data') || '[]');
+        const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+        table.innerHTML = ''; // مسح الجدول قبل التحميل
+
+        data.forEach((item, index) => {
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td>${index + 1}</td>
+                <td class="control">
+                    <button onclick="removeRow(${index})">-</button>
+                </td>
+                <td><img src="${item.barcodeImg}" alt="Barcode" width="100"></td>
+                <td><img src="${item.imageUrl}" alt="Profile" width="50"></td>
+                <td><button id="aa">${item.userEmail}</button></td>
+                <td><button id="aa">${item.name}</button></td>
+                <td><button id="aa">${item.id}</button></td>
+                <td><button id="aa">${item.phone}</button></td>
+            `;
+        });
+    }
+
+    function removeRow(index) {
+        const data = JSON.parse(localStorage.getItem('data') || '[]');
+        data.splice(index, 1);
+        localStorage.setItem('data', JSON.stringify(data));
+        loadData(); // إعادة تحميل الجدول بعد الحذف
+    }
+
+    function parseBarcode(barcode) {
+        const data = {};
+        const parts = barcode.split(', '); // تقسيم النص إلى أجزاء
+
+        parts.forEach(part => {
+            const [key, value] = part.split(': '); // تقسيم كل جزء إلى مفتاح وقيمة
+            if (key === 'Name') data.name = value;
+            if (key === 'ID') data.id = value;
+            if (key === 'Phone') data.phone = value;
+        });
+
+        console.log('Parsed Data:', data); // طباعة البيانات المستخرجة
+        return data; // إرجاع البيانات المستخرجة
+    }
+
+    function scanBarcode() {
+        const barcodeInput = document.getElementById('barcodeInput');
+        const overlay = document.getElementById('overlay');
+        const message = document.getElementById('message');
+        const enterButton = message.querySelector('button'); // زر الدخول/الخروج
+
+        barcodeInput.addEventListener('input', function(event) {
+            const barcode = event.target.value;
+
+            // تحليل الباركود لاستخراج البيانات
+            const parsedData = parseBarcode(barcode);
+
+            // البحث عن البيانات المطابقة في localStorage
+            const data = JSON.parse(localStorage.getItem('data') || '[]');
+            const matchedData = data.find(item => item.id === parsedData.id); // مقارنة الرقم القومي فقط
+
+            console.log('Matched Data:', matchedData); // طباعة البيانات المطابقة
+
+            if (matchedData) {
+                // عرض البيانات المطابقة في النافذة المنبثقة
+                console.log('Updating message with:', matchedData); // تأكد من أن البيانات تصل هنا
+
+                // تحديث الصورة الشخصية
+                const profileImage = document.getElementById('profileImage');
+                profileImage.src = matchedData.imageUrl;
+
+                // تحديث الاسم
+                const profileName = document.getElementById('profileName');
+                profileName.textContent = matchedData.name;
+
+                // تحديث الباركود
+                const emailData = document.getElementById('emailData');
+                emailData.textContent = matchedData.userEmail;
+
+                // تحديث الرقم القومي
+                const idData = document.getElementById('idData');
+                idData.textContent = matchedData.id;
+
+                // تحديث رقم الهاتف
+                const phoneData = document.getElementById('phoneData');
+                phoneData.textContent = matchedData.phone;
+
+                // تحديث الحالة والوقت
+                const status1 = document.getElementById('status1');
+                const status2 = document.getElementById('status2');
+                const status3 = document.getElementById('status3');
+
+                if (matchedData.status === 'دخل القاعة') {
+                    status1.textContent = `دخل القاعة في: ${matchedData.timestamp}`;
+                    enterButton.textContent = 'خروج من القاعة';
+                } else {
+                    status1.textContent = `خرج من القاعة في: ${matchedData.timestamp}`;
+                    enterButton.textContent = 'دخل القاعة';
+                }
+
+                // عرض النافذة المنبثقة
+                message.style.display = 'block';
+                overlay.style.display = 'block';
+
+                // إضافة حدث للزر لتسجيل الدخول/الخروج
+                enterButton.onclick = function() {
+                    if (matchedData.status === 'دخل القاعة') {
+                        matchedData.status = 'خرج من القاعة';
+                        matchedData.timestamp = new Date().toLocaleString();
+                        enterButton.textContent = 'دخل القاعة';
+                    } else {
+                        matchedData.status = 'دخل القاعة';
+                        matchedData.timestamp = new Date().toLocaleString();
+                        enterButton.textContent = 'خروج من القاعة';
+                    }
+
+                    // تحديث الحالة والوقت
+                    status1.textContent = `${matchedData.status} في: ${matchedData.timestamp}`;
+
+                    // حفظ التغييرات في localStorage
+                    localStorage.setItem('data', JSON.stringify(data));
+                    message.style.display = "none";
+                    overlay.style.display = "none";
+                    barcodeInput.value = "";
+                    barcodeInput.click();
+                };
+            } else {
+                alert('البيانات غير موجودة في النظام');
+                barcodeInput.value = "";
+                barcodeInput.click();
+            }
+        });
+    }
+    function searchID() {
+        const idInput = document.getElementById('idInput');
+        const overlay = document.getElementById('overlay');
+        const message = document.getElementById('message');
+        const enterButton = message.querySelector('button'); // زر الدخول/الخروج
+
+            // البحث عن البيانات المطابقة في localStorage
+            const data = JSON.parse(localStorage.getItem('data') || '[]');
+            const matchedData = data.find(item => item.id === idInput.value); // مقارنة الرقم القومي فقط
+
+            console.log('Matched Data:', matchedData); // طباعة البيانات المطابقة
+
+            if (matchedData) {
+                // عرض البيانات المطابقة في النافذة المنبثقة
+                console.log('Updating message with:', matchedData); // تأكد من أن البيانات تصل هنا
+
+                // تحديث الصورة الشخصية
+                const profileImage = document.getElementById('profileImage');
+                profileImage.src = matchedData.imageUrl;
+
+                // تحديث الاسم
+                const profileName = document.getElementById('profileName');
+                profileName.textContent = matchedData.name;
+
+                // تحديث الباركود
+                const emailData = document.getElementById('emailData');
+                emailData.textContent = matchedData.userEmail;
+
+                // تحديث الرقم القومي
+                const idData = document.getElementById('idData');
+                idData.textContent = matchedData.id;
+
+                // تحديث رقم الهاتف
+                const phoneData = document.getElementById('phoneData');
+                phoneData.textContent = matchedData.phone;
+
+                // تحديث الحالة والوقت
+                const status1 = document.getElementById('status1');
+                const status2 = document.getElementById('status2');
+                const status3 = document.getElementById('status3');
+
+                if (matchedData.status === 'دخل القاعة') {
+                    status1.textContent = `دخل القاعة في: ${matchedData.timestamp}`;
+                    enterButton.textContent = 'خروج من القاعة';
+                } else {
+                    status1.textContent = `خرج من القاعة في: ${matchedData.timestamp}`;
+                    enterButton.textContent = 'دخل القاعة';
+                }
+
+                // عرض النافذة المنبثقة
+                message.style.display = 'block';
+                overlay.style.display = 'block';
+
+                // إضافة حدث للزر لتسجيل الدخول/الخروج
+                enterButton.onclick = function() {
+                    if (matchedData.status === 'دخل القاعة') {
+                        matchedData.status = 'خرج من القاعة';
+                        matchedData.timestamp = new Date().toLocaleString();
+                        enterButton.textContent = 'دخل القاعة';
+                    } else {
+                        matchedData.status = 'دخل القاعة';
+                        matchedData.timestamp = new Date().toLocaleString();
+                        enterButton.textContent = 'خروج من القاعة';
+                    }
+
+                    // تحديث الحالة والوقت
+                    status1.textContent = `${matchedData.status} في: ${matchedData.timestamp}`;
+
+                    // حفظ التغييرات في localStorage
+                    localStorage.setItem('data', JSON.stringify(data));
+                    message.style.display = "none";
+                    overlay.style.display = "none";
+                    barcodeInput.value = "";
+                    barcodeInput.click();
+                };
+            } else {
+                alert('البيانات غير موجودة في النظام');
+            }
+    }
+    window.onload = function() {
+        loadData();
+        scanBarcode();
+        const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
+        maxRegistrationsInput.value = maxRegistrations;
+    };
+</script>
+</body>
+</html>
