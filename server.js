@@ -21,5 +21,5 @@ app.get('/get-data', (req, res) => {
 
 // تشغيل الخادم
 app.listen(port, () => {
-    console.log(`الخادم يعمل على http://localhost:${port}`);
+    console.log(`الخادم يعمل على https://eng-amr-ibn-sheikh-marwan.github.io/SignData/`);
 });
