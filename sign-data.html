@@ -273,9 +273,6 @@
 </div>
 <div class="overlay" id="overlay"></div>
     <script>
-        let ii = sessionStorage.getItem("ii");
-        console.log(ii);
-        if (ii) {
         const data = JSON.parse(localStorage.getItem('data') || '[]');
         const userEmail = localStorage.getItem('userEmail');
         const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
@@ -466,12 +463,11 @@
             message1.style.display = 'none';
             overlay.style.display = 'none';
         }
-        } else {
-          window.location.href = "index.html";
-        }
-        } else {
-          window.location.href = "index.html";
-        }
+            fetch('http://localhost:3000/save-data', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key: 'value' })
+});
     </script>
 </body>
 </html>
