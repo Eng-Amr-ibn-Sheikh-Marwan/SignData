@@ -342,324 +342,332 @@
 </div>
 </div>
     <script>
-        // Global variable to store the current tasgel number
-        let currentTasgel = 0;
+        const data = JSON.parse(localStorage.getItem('data') || '[]');
+        let tasgel = JSON.parse(localStorage.getItem('tasgel')) || 0;
+        const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
+        if (maxRegistrations != "") {
+            if (data.length < maxRegistrations) {
+                function checkLength(input, maxLength) {
+                    if (input.value.length > maxLength) {
+                        input.value = input.value.slice(0, maxLength);
+                    }
+                }
 
-        // Function to check input length
-        function checkLength(input, maxLength) {
-            if (input.value.length > maxLength) {
-                input.value = input.value.slice(0, maxLength);
-            }
-        }
+                function checkLength1(input, maxLength) {
+                    if (input.value.length > maxLength) {
+                        input.value = input.value.slice(0, maxLength);
+                    }
+                }
 
-        function checkLength1(input, maxLength) {
-            if (input.value.length > maxLength) {
-                input.value = input.value.slice(0, maxLength);
-            }
-        }
+                function submit() {
+                    const name = document.getElementById('name').value;
+                    const useremail = document.getElementById('email').value;
+                    const id = document.getElementById('id').value;
+                    const phone = document.getElementById('phone').value;
+                    const imageFile = document.getElementById('image').files[0];
+                    const resala = document.getElementById('resala');
+                    resala.innerHTML = ''; // مسح المحتوى الحالى
+                    
+                    const isDuplicate = data.some(item => 
+                        item.useremail === useremail || 
+                        item.id === id || 
+                        item.phone === phone
+                    );
 
-        // Function to submit registration data
-        async function submit() {
-            const name = document.getElementById('name').value;
-            const useremail = document.getElementById('email').value;
-            const id = document.getElementById('id').value;
-            const phone = document.getElementById('phone').value;
-            const imageFile = document.getElementById('image').files[0];
-            const resala = document.getElementById('resala');
-            
-            if (!name || !useremail || id.length !== 14 || phone.length !== 11 || !imageFile) {
-                document.getElementById("errror").textContent = "*يرجى ملء جميع البيانات.";
-                return;
-            }
+                    if (name && useremail && id.length == 14 && phone.length == 11 && imageFile && isDuplicate) {
+                        document.getElementById("errror").textContent = "هذه البيانات بالفعل مسجلة لدينا، وممنوع التسجيل بنفس البيانات اكثر من مرة.";
+                        return;
+                    }
 
-            // Check image size
-            if (imageFile.size > 1024 * 1024) { // 1MB
-                document.getElementById("errror").textContent = "*حجم الصورة يجب أن يكون أقل من 1MB.";
-                return;
-            }
+                    if (name && useremail && id.length == 14 && phone.length == 11 && imageFile) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const imageUrl = e.target.result;
 
-            // Read image as base64
-            const imageUrl = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(imageFile);
+                            const barcodeData = `Email: ${useremail}, Name: ${name}, ID: ${id}, Phone: ${phone}`;
+                            const barcodeDiv = document.getElementById('barcode');
+                            barcodeDiv.innerHTML = '';
+                            new QRCode(barcodeDiv, {
+                                text: barcodeData,
+                                width: 120,
+                                height: 120
+                            });
+
+                            const barcodeImg = barcodeDiv.querySelector('img').src;
+                            const timeTasgel = new Date().toLocaleString();
+                            const a = -1;
+                            tasgel += 1;
+                            localStorage.setItem('tasgel', JSON.stringify(tasgel));
+                            const data = JSON.parse(localStorage.getItem('data') || '[]');
+                            data.push({ tasgel, timeTasgel, useremail, name, id, phone, imageUrl, barcodeImg, a });
+                            const userData = data.find(item => item.tasgel === tasgel);
+                            const rowIndex = data.indexOf(userData) + 1; // إضافة 1 لأن الفهرس يبدأ من الصفر
+                            localStorage.setItem('data', JSON.stringify(data));
+                            alert('تم حفظ بياناتك بنجاح!');
+                            errror.style.display = "none";
+                            errror1.style.display = "none";
+            data.forEach((item, index) => {
+                const statusMessage = document.createElement('div');
+                statusMessage.classList.add('status-message');
+
+                if (item.a === -1) {
+                    statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+                    statusMessage.classList.add('pending'); // لون أصفر
+                } else if (item.a === 0) {
+                    statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+                    statusMessage.classList.add('reviewed'); // لون أخضر
+                } else if (item.a === 1) {
+                    statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+                    statusMessage.classList.add('urgent'); // لون أحمر
+                }
+
+                resala.appendChild(statusMessage);
             });
-
-            // Prepare data for API
-            const registrationData = {
-                timeTasgel: new Date().toLocaleString(),
-                useremail,
-                name,
-                id,
-                phone,
-                imageUrl,
-                a: -1 // Default status: pending
-            };
-
-            try {
-                const response = await fetch('/api/data', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(registrationData)
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(result.error || 'فشل في تسجيل البيانات');
+                            document.getElementById("userForm").style.display = "none";
+                            document.getElementById("a").style.display = "none";
+                            document.getElementById("aa").style.display = "none";
+                            document.getElementById("aa1").style.display = "flex";
+                            document.getElementById("aa3").style.display = "flex";
+                            document.getElementById("a1").style.display = "flex";
+                            document.getElementById("ab1").style.display = "flex";
+                            document.getElementById("numberintasgel").value = rowIndex;
+                            document.getElementById("email1").value = useremail;
+                            document.getElementById("image1").src = imageUrl;
+                            document.getElementById("name1").value = name;
+                            document.getElementById("id1").value = id;
+                            document.getElementById("phone1").value = phone;
+                            document.getElementById("resala").value = a;
+                            // إعادة تعيين النموذج
+                            document.getElementById('userForm').reset();
+                        };
+                        reader.readAsDataURL(imageFile);
+                    } else {
+                      document.getElementById("errror").textContent = "*يرجى ملء جميع البيانات.";
+                    }
                 }
+            } else if (data.length >= maxRegistrations) {
+                userForm.style.display = "none";
+                a.style.display = "none";
+                a1.style.display = "none";
+                aa.style.display = "none";
+                ab2.style.display = "none";
+                aa2.style.display = "block";
+            }
+        } else {
+            ab11.style.display = "none";
+            userForm.style.display = "none";
+            a.style.display = "none";
+            a1.style.display = "none";
+            aa.style.display = "none";
+            aa2.style.display = "none";
+            ab2.style.display = "none";
+            aa4.style.display = "block";
+        }
 
-                currentTasgel = result.tasgel;
-                alert('تم حفظ بياناتك بنجاح!');
-                document.getElementById("errror").textContent = "";
-                showRegistrationDetails(registrationData, result.tasgel);
-            } catch (error) {
-                document.getElementById("errror").textContent = error.message;
+        // التعديل الأول: تفعيل وظيفة تأكيد عند حذف بيانات التسجيل بناءً على userEmail
+        function deletData() {
+            message1.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function taqed() {
+            const data = JSON.parse(localStorage.getItem('data') || '[]');
+            const specificData = data.find(item => item.tasgel === tasgel);
+            if (specificData) {
+                const index = data.indexOf(specificData);
+                data.splice(index, 1);
+                localStorage.setItem('data', JSON.stringify(data));
+                alert('تم حذف بياناتك بنجاح!');
+                location.reload();
             }
         }
 
-        // Function to display registration details
-        function showRegistrationDetails(data, tasgelNumber) {
-            document.getElementById("userForm").style.display = "none";
-            document.getElementById("a").style.display = "none";
-            document.getElementById("aa").style.display = "none";
-            document.getElementById("aa1").style.display = "flex";
-            document.getElementById("aa3").style.display = "flex";
-            document.getElementById("a1").style.display = "flex";
-            document.getElementById("ab1").style.display = "flex";
-            document.getElementById("ab2").style.display = "block";
-
-            // Generate QR code
-            const barcodeData = `Email: ${data.useremail}, Name: ${data.name}, ID: ${data.id}, Phone: ${data.phone}`;
-            const barcodeDiv = document.getElementById('barcode');
-            barcodeDiv.innerHTML = '';
-            new QRCode(barcodeDiv, {
-                text: barcodeData,
-                width: 120,
-                height: 120
-            });
-
-            // Update UI with registration details
-            document.getElementById("numberintasgel").value = tasgelNumber;
-            document.getElementById("email1").value = data.useremail;
-            document.getElementById("image1").src = data.imageUrl;
-            document.getElementById("name1").value = data.name;
-            document.getElementById("id1").value = data.id;
-            document.getElementById("phone1").value = data.phone;
-
-            // Set status message
-            updateStatusMessage(data.a);
-        }
-
-        // Function to update status message
-        function updateStatusMessage(status) {
-            const resala = document.getElementById('resala');
-            resala.innerHTML = '';
-
-            const statusMessage = document.createElement('div');
-            statusMessage.classList.add('status-message');
-
-            if (status === -1) {
-                statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
-                statusMessage.classList.add('pending');
-            } else if (status === 0) {
-                statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
-                statusMessage.classList.add('reviewed');
-            } else if (status === 1) {
-                statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
-                statusMessage.classList.add('urgent');
-            }
-
-            resala.appendChild(statusMessage);
-        }
-
-        // Function to load user data
-        async function loadUserData() {
-            if (!currentTasgel) return;
-
-            try {
-                const response = await fetch(`/api/data?tasgel=${currentTasgel}`);
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error('فشل في تحميل البيانات');
-                }
-
-                const userData = data.find(item => item.tasgel === currentTasgel);
-                if (userData) {
-                    showRegistrationDetails(userData, currentTasgel);
-                }
-            } catch (error) {
-                console.error('Error loading user data:', error);
+        // التعديل الثاني: تفعيل خاصية تعديل البيانات وحفظ التعديلات مع تغيير كل البيانات والباركود
+        function editData() {
+            const userData = data.find(item => item.tasgel === tasgel);
+            if (userData) {
+                document.getElementById("nameedit").value = userData.name;
+                document.getElementById("emailedit").value = userData.useremail;
+                document.getElementById("idedit").value = userData.id;
+                document.getElementById("phoneedit").value = userData.phone;
+                document.getElementById("imageedit").src = userData.imageUrl;
+                message.style.display = 'block';
+                overlay.style.display = 'block';
             }
         }
 
-        // Function to edit data
-        async function editData() {
-            try {
-                const response = await fetch(`/api/data?tasgel=${currentTasgel}`);
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error('فشل في تحميل البيانات');
-                }
-
-                const userData = data.find(item => item.tasgel === currentTasgel);
-                if (userData) {
-                    document.getElementById("nameedit").value = userData.name;
-                    document.getElementById("emailedit").value = userData.useremail;
-                    document.getElementById("idedit").value = userData.id;
-                    document.getElementById("phoneedit").value = userData.phone;
-                    message.style.display = 'block';
-                    overlay.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Error loading data for edit:', error);
-            }
-        }
-
-        // Function to save edited data
-        async function saveData() {
+        function saveData() {
             const nameedit = document.getElementById('nameedit').value;
             const emailedit = document.getElementById('emailedit').value;
             const idedit = document.getElementById('idedit').value;
             const phoneedit = document.getElementById('phoneedit').value;
             const imageFile = document.getElementById('imageedit').files[0];
+            const resala = document.getElementById('resala');
             
-            if (!nameedit || !emailedit || idedit.length !== 14 || phoneedit.length !== 11 || !imageFile) {
-                document.getElementById("errror1").textContent = "*يرجى ملء جميع البيانات.";
+            const isDuplicate = data.some(item => 
+                (item.useremail === emailedit || 
+                item.id === idedit || 
+                item.phone === phoneedit) && 
+                item.tasgel !== tasgel
+            );
+
+            if (nameedit && emailedit && idedit.length == 14 && phoneedit.length == 11 && imageFile && isDuplicate) {
+                document.getElementById("errror1").textContent = "هذه البيانات بالفعل مسجلة لدينا، وممنوع التسجيل بنفس البيانات اكثر من مرة.";
                 return;
             }
 
-            // Check image size
-            if (imageFile.size > 1024 * 1024) { // 1MB
-                document.getElementById("errror1").textContent = "*حجم الصورة يجب أن يكون أقل من 1MB.";
-                return;
-            }
-
-            // Read image as base64
-            const imageUrl = await new Promise((resolve) => {
+            if (nameedit && emailedit && idedit.length == 14 && phoneedit.length == 11 && imageFile) {
                 const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(imageFile);
+                reader.onload = function (e) {
+                    const imageUrl = e.target.result;
+
+                    const barcodeData = `Email: ${emailedit}, Name: ${nameedit}, ID: ${idedit}, Phone: ${phoneedit}`;
+                    const barcodeDiv = document.getElementById('barcode');
+                    barcodeDiv.innerHTML = '';
+                    new QRCode(barcodeDiv, {
+                        text: barcodeData,
+                        width: 128,
+                        height: 128
+                    });
+
+                    const barcodeImg = barcodeDiv.querySelector('img').src;
+
+                    const userData = data.find(item => item.tasgel === tasgel);
+                    if (userData) {
+                        userData.name = nameedit;
+                        userData.useremail = emailedit;
+                        userData.id = idedit;
+                        userData.phone = phoneedit;
+                        userData.imageUrl = imageUrl;
+                        userData.a = -1;
+                        userData.barcodeImg = barcodeImg;
+                        localStorage.setItem('data', JSON.stringify(data));
+                        alert('تم تعديل بياناتك بنجاح!');
+                        resala.innerHTML = ''; // مسح المحتوى الحالى
+            data.forEach((item, index) => {
+                const statusMessage = document.createElement('div');
+                statusMessage.classList.add('status-message');
+
+                if (item.a === -1) {
+                    statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+                    statusMessage.classList.add('pending'); // لون أصفر
+                } else if (item.a === 0) {
+                    statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+                    statusMessage.classList.add('reviewed'); // لون أخضر
+                } else if (item.a === 1) {
+                    statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+                    statusMessage.classList.add('urgent'); // لون أحمر
+                }
+
+                resala.appendChild(statusMessage);
             });
-
-            // Prepare updated data
-            const updatedData = {
-                name: nameedit,
-                useremail: emailedit,
-                id: idedit,
-                phone: phoneedit,
-                imageUrl,
-                a: -1 // Reset status to pending after edit
-            };
-
-            try {
-                const response = await fetch(`/api/data/${currentTasgel}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(updatedData)
-                });
-
-                if (!response.ok) {
-                    const result = await response.json();
-                    throw new Error(result.error || 'فشل في تحديث البيانات');
-                }
-
-                alert('تم تعديل بياناتك بنجاح!');
-                document.getElementById("errror1").textContent = "";
-                Close();
-                loadUserData(); // Refresh the displayed data
-            } catch (error) {
-                document.getElementById("errror1").textContent = error.message;
+                        document.getElementById("image1").src = imageUrl;
+                        document.getElementById("email1").value = emailedit;
+                        document.getElementById("name1").value = nameedit;
+                        document.getElementById("id1").value = idedit;
+                        document.getElementById("phone1").value = phoneedit;
+                        message.style.display = 'none';
+                        overlay.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+               document.getElementById("errror1").textContent = "*يرجى ملء جميع البيانات.";
             }
         }
 
-        // Function to delete data
-        async function deletData() {
-            message1.style.display = 'block';
-            overlay.style.display = 'block';
-        }
-
-        async function taqed() {
-            try {
-                const response = await fetch(`/api/data/${currentTasgel}`, {
-                    method: 'DELETE'
+        // التعديل الثالث: عرض بيانات التسجيل إذا كان userEmail مسجل مسبقًا
+        function loadUserData() {
+            const userData = data.find(item => item.tasgel === tasgel);
+            if (userData) {
+                document.getElementById("userForm").style.display = "none";
+                document.getElementById("a").style.display = "none";
+                document.getElementById("aa").style.display = "none";
+                document.getElementById("aa2").style.display = "none";
+                document.getElementById("aa4").style.display = "none";
+                document.getElementById("aa1").style.display = "flex";
+                document.getElementById("aa3").style.display = "flex";
+                document.getElementById("a1").style.display = "flex";
+                document.getElementById("ab1").style.display = "flex";
+                document.getElementById("ab2").style.display = "block";
+                const rowIndex = data.indexOf(userData) + 1; // إضافة 1 لأن الفهرس يبدأ من الصفر
+                document.getElementById("numberintasgel").value = rowIndex;
+                document.getElementById("email1").value = userData.useremail;
+                document.getElementById("image1").src = userData.imageUrl;
+                document.getElementById("name1").value = userData.name;9
+                document.getElementById("id1").value = userData.id;
+                document.getElementById("phone1").value = userData.phone;
+                document.getElementById("resala").value = userData.a;
+                const barcodeDiv = document.getElementById('barcode');
+                barcodeDiv.innerHTML = '';
+                new QRCode(barcodeDiv, {
+                    text: `Email: ${userData.useremail}, Name: ${userData.name}, ID: ${userData.id}, Phone: ${userData.phone}`,
+                    width: 120,
+                    height: 120
                 });
-
-                if (!response.ok) {
-                    const result = await response.json();
-                    throw new Error(result.error || 'فشل في حذف البيانات');
-                }
-
-                alert('تم حذف بياناتك بنجاح!');
-                Close();
-                location.reload();
-            } catch (error) {
-                alert(error.message);
             }
         }
+
+        loadUserData();
 
         function Close() {
             message.style.display = 'none';
             message1.style.display = 'none';
             overlay.style.display = 'none';
         }
+            const resala = document.getElementById('resala');
+            resala.innerHTML = ''; // مسح المحتوى الحالي
 
-        // Check registration status on page load
-        async function checkRegistrationStatus() {
-            try {
-                // Check max registrations first
-                const maxResponse = await fetch('/api/max-registrations');
-                const maxData = await maxResponse.json();
-                
-                if (!maxResponse.ok || maxData.maxRegistrations === null) {
-                    document.getElementById("userForm").style.display = "none";
-                    document.getElementById("a").style.display = "none";
-                    document.getElementById("aa").style.display = "none";
-                    document.getElementById("aa4").style.display = "block";
-                    return;
+            data.forEach((item, index) => {
+                const statusMessage = document.createElement('div');
+                statusMessage.classList.add('status-message');
+
+                if (item.a === -1) {
+                    statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+                    statusMessage.classList.add('pending'); // لون أصفر
+                } else if (item.a === 0) {
+                    statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+                    statusMessage.classList.add('reviewed'); // لون أخضر
+                } else if (item.a === 1) {
+                    statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+                    statusMessage.classList.add('urgent'); // لون أحمر
                 }
 
-                // Check current registrations count
-                const dataResponse = await fetch('/api/data');
-                const allData = await dataResponse.json();
-                
-                if (allData.length >= maxData.maxRegistrations) {
-                    document.getElementById("userForm").style.display = "none";
-                    document.getElementById("a").style.display = "none";
-                    document.getElementById("aa").style.display = "none";
-                    document.getElementById("aa2").style.display = "block";
-                    return;
-                }
-
-                // Try to load existing registration if any
-                await loadUserData();
-            } catch (error) {
-                console.error('Error checking registration status:', error);
-            }
-        }
-
-        // Initialize on page load
-        window.onload = checkRegistrationStatus;
-
-        // Event listeners for keyboard shortcuts
-        document.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                const activeElement = document.activeElement;
-                if (activeElement.id === "name" || activeElement.id === "email" || 
-                    activeElement.id === "id" || activeElement.id === "phone") {
-                    document.getElementById("a").click();
-                } else if (activeElement.id === "nameedit" || activeElement.id === "emailedit" || 
-                          activeElement.id === "idedit" || activeElement.id === "phoneedit") {
-                    document.getElementById("abc").click();
-                }
-            }
-        });
+                resala.appendChild(statusMessage);
+            });
+document.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    // حدد الزر الذي تريد تفعيله
+    var a = document.getElementById("a");
+    // قم بتفعيل الزر
+    a.click();
+  }
+  if (event.key === "Enter") {
+    // حدد الزر الذي تريد تفعيله
+    var ab11 = document.getElementById("ab11");
+    // قم بتفعيل الزر
+    ab11.click();
+  }
+  if (event.key === "Delet") {
+    // حدد الزر الذي تريد تفعيله
+    var ab12 = document.getElementById("ab12");
+    // قم بتفعيل الزر
+    ab12.click();
+  }
+  if (event.key === "Enter") {
+    // حدد الزر الذي تريد تفعيله
+    var abc = document.getElementById("abc");
+    // قم بتفعيل الزر
+    abc.click();
+  }
+  if (event.key === "close") {
+    // حدد الزر الذي تريد تفعيله
+    var close = document.getElementById("close");
+    // قم بتفعيل الزر
+    close.click();
+  }
+  
+});
     </script>
 </body>
 </html>
