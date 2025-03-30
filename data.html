@@ -14,8 +14,13 @@
             background-size: cover; /* لتكبير الصورة لتغطية الشاشة */
             background-position: center; /* لتوسيط الصورة */
         }
-        #total {
-        }
+    #total {
+        background-color: #ffffffa2;
+        border-radius: 30px;
+        padding: 10px; /* إضافة مسافة داخلية */
+        margin: 20px auto; /* توسيط العنصر وإضافة مسافة خارجية */
+        max-width: 95%; /* تحديد أقصى عرض لتجنب الامتداد الزائد */
+    }
 .overlay {
             display: none;
             position: fixed;
@@ -192,7 +197,7 @@
 </div>
 <div class="tanbeh">
   <p>*لن يتم فتح التسجيل الا عند وضع عدد محدد للتسجيل.</p>
-  <p></p>
+  <p>*بعد عملية التسجل اذا تم حذف العدد المطلوب سيتم غلق خاصية تعديل البيانات لدى المسجلين.</p>
   <p></p>
 </div>
 <h2>المسجلين</h2>
@@ -1025,20 +1030,20 @@ function nO1() {
         const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
         maxRegistrationsInput.value = maxRegistrations;
     };
-document.addEventListener("keypress", function(event) {
-  if (event.key === "Enter") {
+//document.addEventListener("keypress", function(event) {
+  //if (event.key === "Enter") {
     // حدد الزر الذي تريد تفعيله
-    var aaa = document.getElementById("aaa");
+    //var aaa = document.getElementById("aaa");
     // قم بتفعيل الزر
-    aaa.click();
-  }
-  if (event.key === "close") {
+    //aaa.click();
+  //}
+  //if (event.key === "close") {
     // حدد الزر الذي تريد تفعيله
-    var close = document.getElementById("close");
+    //var close = document.getElementById("close");
     // قم بتفعيل الزر
-    close.click();
-  }
-});
+    //close.click();
+  //}
+//});
 </script>
 </body>
 </html>
