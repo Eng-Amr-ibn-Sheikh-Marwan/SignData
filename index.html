@@ -3,29 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sign-data</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>نظام تسجيل الحضور</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --danger-color: #f72585;
+            --success-color: #4cc9f0;
+            --warning-color: #f8961e;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Tajawal', sans-serif;
             text-align: center;
             direction: rtl;
-            background-image: url(96030454-77b1-4daa-ba19-cf6bf45deb9b.webp);
-            background-size: cover; /* لتكبير الصورة لتغطية الشاشة */
-            background-position: center; /* لتوسيط الصورة */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark-color);
         }
-    #total {
-        background-color: #ffffffa2;
-        border-radius: 30px;
-        display: inline-block; /* أو width: fit-content; */
-        padding: 10px; /* إضافة مسافة داخلية */
-        margin: 0 20px auto; /* توسيط العنصر وإضافة مسافة خارجية */
-        max-width: 95%; /* تحديد أقصى عرض لتجنب الامتداد الزائد */
-    }
-    #total h1, #total h3 {
-      margin: 0;
-    }
-.overlay {
+        
+        #total {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #total::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+        }
+        
+        #total h1, #total h3 {
+            margin: 15px 0;
+            color: var(--primary-color);
+        }
+        
+        .overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -34,201 +72,272 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 999;
-}
-#message {
-        display: none;
-        position: fixed;
-        width: 80%; /* تكبير عرض النافذة المنبثقة */
-        max-width: 800px; /* تحديد أقصى عرض */
-        padding: 0 0 20px 0; /* تقليل الحشو */
-        border-radius: 10px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-}
-#message table {
-  display: flex;
-  justify-content: center;
-}
-#message1 {
-        display: none;
-        position: fixed;
-        width: 80%; /* تكبير عرض النافذة المنبثقة */
-        max-width: 800px; /* تحديد أقصى عرض */
-        padding: 0 0 20px 0; /* تقليل الحشو */
-        border-radius: 10px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-}
-        #aa2 , #aa4 {
-          display: none;
-          justify-content: center;
-          margin: 20px 0 0 0;
-        }
-        #aa1 , #aa3 {
-          display: none;
-          justify-content: center;
-        }
-        #userForm {
-          display: flex;
-          justify-content: center;
-        }
-        #table {
-            width: 100%;
-            max-width: 800px;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            overflow-y: auto;
-        }
-        table {
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            overflow-y: auto;
-        }
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
-        td {
-            background-color: white;
-        }
-        #a1 {
-            display: none;
-            justify-content: center;
-            margin: 10px 0 0 0;
-        }
-        #a1 table {
-            width: 200px;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #a1 th, #a1 td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        #a1 th {
-            background-color: #007bff;
-            color: white;
-        }
-        #a1 input {
-          width: 100%;
-        }
-        input {
-            width: 200px;
-            padding: 8px;
-            box-sizing: border-box;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            outline: none;
-            transition: 0.3s;
-        }
-        input:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
-        }
-        #ab1 {
-          display: none;
-          justify-content: center;
-        }
-        #ab2, #aa3 {
-          color: red;
-        }
-        #a {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        #ab11 {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin: 10px 0 0 50px;
+            backdrop-filter: blur(5px);
         }
         
-        #a:hover , #ab11:hover ,#ab12:hover {
-            opacity: 0.9;
+        .modal {
+            display: none;
+            position: fixed;
+            width: 90%;
+            max-width: 600px;
+            padding: 0;
+            border-radius: var(--border-radius);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+            animation: modalFadeIn 0.3s ease-out;
         }
-        #ab12 {
-          background: #a30808;
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+        
+        .modal h2 {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin: 10px 50px 0 0;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            padding: 20px;
+            margin: 0;
+            font-size: 1.5rem;
         }
-        #abc {
-            background: #007bff;
+        
+        .modal-content {
+            padding: 20px;
+        }
+        
+        #userForm, #a1 {
+            width: 100%;
+            margin: 20px auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--primary-color);
             color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 0 0 0 50px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: 0.3s;
+            font-weight: 500;
         }
-        #close {
-            background: #007bff;
+        
+        tr:hover td {
+            background-color: #f5f5f5;
+        }
+        
+        input[type="text"], 
+        input[type="number"], 
+        input[type="email"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input[type="text"]:focus, 
+        input[type="number"]:focus, 
+        input[type="email"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+        }
+        
+        input[type="button"], 
+        input[type="button"]:read-only {
+            width: 100%;
+            padding: 12px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+            cursor: default;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            margin: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
             color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 0 50px 0 0;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: 0.3s;
         }
-        #abc:hover , .close:hover {
-            opacity: 0.9;
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
-        #barcode {
-          display: flex;
-          justify-content: center;
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
         }
+        
+        .btn-danger:hover {
+            background-color: #d1145a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
         .status-message {
-            font-size: 20px;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        
         .status-message.pending {
-            background-color: #ffcc00; /* لون أصفر للبيانات قيد التعديل */
+            background-color: var(--warning-color);
+            color: white;
         }
+        
         .status-message.reviewed {
-            background-color: #4CAF50; /* لون أخضر للبيانات التي تمت مراجعتها */
+            background-color: var(--success-color);
             color: white;
         }
+        
         .status-message.urgent {
-            background-color: #f44336; /* لون أحمر للبيانات العاجلة */
+            background-color: var(--danger-color);
             color: white;
         }
-        #errror, #errror1 {
-          color: red;
+        
+        .error-message {
+            color: var(--danger-color);
+            margin: 10px 0;
+            font-weight: 500;
+            font-size: 0.9rem;
         }
+        
         .amr {
-          user-select: none;
-          display: flex;
-          justify-content: center;
-          margin-top: 5px;
+            user-select: none;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .responsive-table {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .responsive-table::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .responsive-table::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            #total {
+                padding: 20px 15px;
+            }
+            
+            th, td {
+                padding: 10px 5px;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .modal {
+                width: 95%;
+            }
+        }
+        
+        /* Animation for form elements */
+        .form-group {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Floating animation for buttons */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .btn-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Pulse animation for important elements */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
         }
     </style>
 </head>
@@ -239,456 +348,1480 @@
     <h3 id="aa3">*يجب عليك الاحتفاظ بهذه التذكرة حتى تستطيع دخول القاعة.</h3>
     <h1 id="aa2">تم غلق التسجيل لإكتمال العدد</h1>
     <h1 id="aa4">التسجيل مغلق الان</h1>
-    <div id="userForm">
-      <table>
-        <thead>
-          <tr>
-            <th>الاسم كامل باللغة الانجليزية:</th>
-            <th><input type="text" id="name" placeholder="الاسم كامل باللغة الانجليزية" required></th>
-          </tr>
-          <tr>
-            <th>إيميل جوجل:</th>
-            <th><input type="text" id="email" placeholder="إيميل جوجل" required></th>
-          </tr>
-          <tr>
-            <th>الرقم القومى المكون من 14 رقم:</th>
-            <th><input type="number" id="id" placeholder="الرقم القومى المكون من 14 رقم" oninput="checkLength(this, 14)" required></th>
-          </tr>
-          <tr>
-            <th>رقم الموبايل:</th>
-            <th><input type="number" id="phone" placeholder="رقم الموبايل" oninput="checkLength1(this, 11)" required></th>
-          </tr>
-          <tr>
-            <th>صورة شخصية:</th>
-            <th><input type="file" id="image" accept="image/*" required></th>
-          </tr>
-          <tr>
-            <th colspan="2">
-              *الصورة الشخصية يجب ان يكون حجمها اقل من 1MB.
-            </th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-    <p id="errror"></p>
-    <button id="a" type="submit" onclick="submit()">إرسال</button>
-    <div id="a1">
-      <table id="table">
-        <thead>
-          <tr>
-            <th>صورة شخصية</th>
-            <th>رقم المقعد</th>
-            <th>email</th>
-            <th>الاسم كامل باللغة الانجليزية</th>
-            <th>الرقم القومى المكون من 14 رقم</th>
-            <th>رقم الموبايل</th>
-            <th>الباركود</th>
-          </tr>
-          <tr>
-            <td><img id="image1" src="" alt="صورة شخصية" style="width: 100px; height: 100px;" readonly></td>
-            <td><input type="button" id="numberintasgel" readonly></td>
-            <td><input type="button" id="email1" readonly></td>
-            <td><input type="button" id="name1" readonly></td>
-            <td><input type="button" id="id1" readonly></td>
-            <td><input type="button" id="phone1" readonly></td>
-            <td><div id="barcode"></div></td>
-          </tr>
-          <tr>
-            <th>حالة صحة بياناتك</th>
-            <td colspan="6">
-              <h2 type="text" id="resala"></h2>
-            </td>
-          </tr>
-        </thead>
-      </table>
-    </div>
-    <div id="ab2">
-        <h3>
-          *سيتم مراجعة تسجيلك اذا تم قبوله سيظهر لك رسالة التأكيد هنا واذا تم رفضه سيظهر لك رسالة الرفض هنا وسيتم منحك وقت لتعديل بياناتك والا سيتم حذف تسجيلك.
-          </h3>
-    </div>
-    <div id="ab1">
-        <button id="ab11" onclick="editData()">تعديل بياناتك</button>
-        <button id="ab12" onclick="deletData()">حذف التسجيل</button>
-    </div>
-<div id="message">
-  <h2>تعديل بياناتك</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>الاسم كامل باللغة الانجليزية</th>
-            <th><input type="text" id="nameedit" placeholder="الاسم كامل باللغة الانجليزية" required></th>
-          </tr>
-          <tr>
-            <th>إيميل جوجل:</th>
-            <th><input type="text" id="emailedit" placeholder="إيميل جوجل" required></th>
-          </tr>
-          <tr>
-            <th>الرقم القومى المكون من 14 رقم</th>
-            <th><input type="number" id="idedit" placeholder="الرقم القومى المكون من 14 رقم" oninput="checkLength(this, 14)" required></th>
-          </tr>
-          <tr>
-            <th>رقم الموبايل</th>
-            <th><input type="number" id="phoneedit" placeholder="رقم الموبايل" oninput="checkLength1(this, 11)" required></th>
-          </tr>
-          <tr>
-            <th>صورة شخصية</th>
-            <th><input type="file" id="imageedit" accept="image/*" required></th>
-          </tr>
-          <tr>
-            <th colspan="2">
-              *الصورة الشخصية يجب ان يكون حجمها اقل من 1MB.
-            </th>
-          </tr>
-        </thead>
-      </table>
-      <p id="errror1"></p>
-    <button id="abc" onclick="saveData()">حفظ التعديلات</button>
-    <button id="close" onclick="Close()">الغاء</button>
-</div>
-<div id="message1">
-  <h2>رسالة تأكيد حذف بياناتك</h2>
-  <h3>هل انت متأكد من أنك تريد حذف بياناتك؟</h3>
-    <button id="abc" onclick="taqed()">تأكيد</button>
-    <button id="close" onclick="Close()">الغاء</button>
-</div>
-<div class="overlay" id="overlay"></div>
-<div class="amr" dir="rtl">
-  <p>
-    #المهندس_عمرو_بن_الشيخ_مروان
-  </p>
-</div>
-</div>
-    <script>
-        const data = JSON.parse(localStorage.getItem('data') || '[]');
-        let tasgel = JSON.parse(localStorage.getItem('tasgel')) || 0;
-        const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
-        if (maxRegistrations != "") {
-            if (data.length < maxRegistrations) {
-                function checkLength(input, maxLength) {
-                    if (input.value.length > maxLength) {
-                        input.value = input.value.slice(0, maxLength);
-                    }
-                }
-
-                function checkLength1(input, maxLength) {
-                    if (input.value.length > maxLength) {
-                        input.value = input.value.slice(0, maxLength);
-                    }
-                }
-                function isEnglish(text) {
-                  return /^[A-Za-z\s]+$/.test(text);
-                }
-                function startsWith010(phone) {
-                  return phone.startsWith("010");
-                }
-                function submit() {
-                    const name = document.getElementById('name').value;
-                    const useremail = document.getElementById('email').value;
-                    const id = document.getElementById('id').value;
-                    const phone = document.getElementById('phone').value;
-                    const imageFile = document.getElementById('image').files[0];
-                    const resala = document.getElementById('resala');
-                    resala.innerHTML = ''; // مسح المحتوى الحالى
-                    
-                    const isDuplicate = data.some(item => 
-                        item.useremail === useremail || 
-                        item.id === id || 
-                        item.phone === phone
-                    );
-                    if (name && useremail && id.length == 14 && phone.length == 11 && imageFile && isDuplicate) {
-                        document.getElementById("errror").textContent = "هذه البيانات بالفعل مسجلة لدينا، وممنوع التسجيل بنفس البيانات اكثر من مرة.";
-                        return;
-                    }
-
-                    if (name && useremail && id.length == 14 && phone.length == 11 && imageFile) {
-if (!isEnglish(name)) {
-        document.getElementById("errror").textContent = "يجب كتابة الاسم باللغة الإنجليزية فقط (بدون أحرف عربية أو رموز).";
-        return;
-    }
     
-    // التحقق من أن رقم الهاتف يبدأ بـ 010
-    if (!startsWith010(phone)) {
-        document.getElementById("errror").textContent = "يجب أن يبدأ رقم الهاتف بـ 010.";
-        return;
-    }
-                        const reader = new FileReader();
-                        reader.onload = function (e) {
-                            const imageUrl = e.target.result;
+    <div id="userForm">
+      <div class="responsive-table">
+        <table>
+          <thead>
+            <tr class="form-group">
+              <th>الاسم كامل باللغة الانجليزية:</th>
+              <th><input type="text" id="name" placeholder="الاسم كامل باللغة الانجليزية" required></th>
+            </tr>
+            <tr class="form-group">
+              <th>إيميل جوجل:</th>
+              <th><input type="text" id="email" placeholder="إيميل جوجل" required></th>
+            </tr>
+            <tr class="form-group">
+              <th>الرقم القومى المكون من 14 رقم:</th>
+              <th><input type="number" id="id" placeholder="الرقم القومى المكون من 14 رقم" oninput="checkLength(this, 14)" required></th>
+            </tr>
+            <tr class="form-group">
+              <th>رقم الموبايل:</th>
+              <th><input type="number" id="phone" placeholder="رقم الموبايل" oninput="checkLength1(this, 11)" required></th>
+            </tr>
+            <tr class="form-group">
+              <th>صورة شخصية:</th>
+              <th><input type="file" id="image" accept="image/*" required></th>
+            </tr>
+            <tr>
+              <th colspan="2" style="font-weight: normal; font-size: 0.9rem; color: #6c757d;">
+                *الصورة الشخصية يجب ان يكون حجمها اقل من 1MB.
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <p id="errror" class="error-message"></p>
+    <button id="a" class="btn btn-primary btn-float" type="submit" onclick="submit()">إرسال</button>
+    
+    <div id="a1">
+      <div class="responsive-table">
+        <table id="table">
+          <thead>
+            <tr>
+              <th>صورة شخصية</th>
+              <th>رقم المقعد</th>
+              <th>البريد الإلكتروني</th>
+              <th>الاسم الكامل</th>
+              <th>الرقم القومي</th>
+              <th>رقم الموبايل</th>
+              <th>الباركود</th>
+            </tr>
+            <tr>
+              <td><img id="image1" src="" alt="صورة شخصية" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;"></td>
+              <td><input type="button" id="numberintasgel" readonly></td>
+              <td><input type="button" id="email1" readonly></td>
+              <td><input type="button" id="name1" readonly></td>
+              <td><input type="button" id="id1" readonly></td>
+              <td><input type="button" id="phone1" readonly></td>
+              <td><div id="barcode"></div></td>
+            </tr>
+            <tr>
+              <th>حالة صحة بياناتك</th>
+              <td colspan="6">
+                <div id="resala"></div>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div id="ab2">
+        <h3 style="color: #6c757d; font-weight: normal; line-height: 1.6;">
+          *سيتم مراجعة تسجيلك، إذا تم قبوله سيظهر لك رسالة التأكيد هنا، وإذا تم رفضه سيظهر لك رسالة الرفض هنا وسيتم منحك وقت لتعديل بياناتك وإلا سيتم حذف تسجيلك.
+        </h3>
+    </div>
+    
+    <div id="ab1" style="display: flex; justify-content: center; flex-wrap: wrap;">
+        <button id="ab11" class="btn btn-primary" onclick="editData()">تعديل بياناتك</button>
+        <button id="ab12" class="btn btn-danger" onclick="deletData()">حذف تسجيلك</button>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div id="message" class="modal">
+      <h2>تعديل بياناتك</h2>
+      <div class="modal-content">
+        <div class="responsive-table">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم كامل باللغة الانجليزية</th>
+                <th><input type="text" id="nameedit" placeholder="الاسم كامل باللغة الانجليزية" required></th>
+              </tr>
+              <tr>
+                <th>إيميل جوجل:</th>
+                <th><input type="text" id="emailedit" placeholder="إيميل جوجل" required></th>
+              </tr>
+              <tr>
+                <th>الرقم القومى المكون من 14 رقم</th>
+                <th><input type="number" id="idedit" placeholder="الرقم القومى المكون من 14 رقم" oninput="checkLength(this, 14)" required></th>
+              </tr>
+              <tr>
+                <th>رقم الموبايل</th>
+                <th><input type="number" id="phoneedit" placeholder="رقم الموبايل" oninput="checkLength1(this, 11)" required></th>
+              </tr>
+              <tr>
+                <th>صورة شخصية</th>
+                <th><input type="file" id="imageedit" accept="image/*" required></th>
+              </tr>
+              <tr>
+                <th colspan="2" style="font-weight: normal; font-size: 0.9rem; color: #6c757d;">
+                  *الصورة الشخصية يجب ان يكون حجمها اقل من 1MB.
+                </th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <p id="errror1" class="error-message"></p>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button id="abc" class="btn btn-primary" onclick="saveData()">حفظ التعديلات</button>
+          <button id="close" class="btn btn-secondary" onclick="Close()">الغاء</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="message1" class="modal">
+      <h2>رسالة تأكيد حذف بياناتك</h2>
+      <div class="modal-content">
+        <h3 style="margin-bottom: 30px; color: var(--dark-color);">هل انت متأكد من أنك تريد حذف بياناتك؟</h3>
+        <div style="display: flex; justify-content: center;">
+          <button id="abc1" class="btn btn-danger" onclick="taqed()">تأكيد</button>
+          <button id="close1" class="btn btn-secondary" onclick="Close()">الغاء</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    <div class="amr" dir="rtl">
+      <p>#المهندس_عمرو_بن_الشيخ_مروان</p>
+    </div>
+</div>
 
-                            const barcodeData = `Email: ${useremail}, Name: ${name}, ID: ${id}, Phone: ${phone}`;
-                            const barcodeDiv = document.getElementById('barcode');
-                            barcodeDiv.innerHTML = '';
-                            new QRCode(barcodeDiv, {
-                                text: barcodeData,
-                                width: 120,
-                                height: 120
-                            });
-
-                            const barcodeImg = barcodeDiv.querySelector('img').src;
-                            const timeTasgel = new Date().toLocaleString();
-                            const a = -1;
-                            tasgel += 1;
-                            localStorage.setItem('tasgel', JSON.stringify(tasgel));
-                            const data = JSON.parse(localStorage.getItem('data') || '[]');
-                            data.push({ tasgel, timeTasgel, useremail, name, id, phone, imageUrl, barcodeImg, a });
-                            const userData = data.find(item => item.tasgel === tasgel);
-                            const rowIndex = data.indexOf(userData) + 1; // إضافة 1 لأن الفهرس يبدأ من الصفر
-                            localStorage.setItem('data', JSON.stringify(data));
-                            alert('تم حفظ بياناتك بنجاح!');
-                            errror.style.display = "none";
-                            errror1.style.display = "none";
-            data.forEach((item, index) => {
-                const statusMessage = document.createElement('div');
-                statusMessage.classList.add('status-message');
-
-                if (item.a === -1) {
-                    statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
-                    statusMessage.classList.add('pending'); // لون أصفر
-                } else if (item.a === 0) {
-                    statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
-                    statusMessage.classList.add('reviewed'); // لون أخضر
-                } else if (item.a === 1) {
-                    statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
-                    statusMessage.classList.add('urgent'); // لون أحمر
+<script>
+    const data = JSON.parse(localStorage.getItem('data') || '[]');
+    let tasgel = JSON.parse(localStorage.getItem('tasgel')) || 0;
+    const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
+    
+    if (maxRegistrations != "") {
+        if (data.length < maxRegistrations) {
+            function checkLength(input, maxLength) {
+                if (input.value.length > maxLength) {
+                    input.value = input.value.slice(0, maxLength);
                 }
-
-                resala.appendChild(statusMessage);
-            });
-                            document.getElementById("userForm").style.display = "none";
-                            document.getElementById("a").style.display = "none";
-                            document.getElementById("aa").style.display = "none";
-                            document.getElementById("aa1").style.display = "flex";
-                            document.getElementById("aa3").style.display = "flex";
-                            document.getElementById("a1").style.display = "flex";
-                            document.getElementById("ab1").style.display = "flex";
-                            document.getElementById("numberintasgel").value = rowIndex;
-                            document.getElementById("email1").value = useremail;
-                            document.getElementById("image1").src = imageUrl;
-                            document.getElementById("name1").value = name;
-                            document.getElementById("id1").value = id;
-                            document.getElementById("phone1").value = phone;
-                            document.getElementById("resala").value = a;
-                            // إعادة تعيين النموذج
-                            document.getElementById('userForm').reset();
-                        };
-                        reader.readAsDataURL(imageFile);
-                    } else {
-                      document.getElementById("errror").textContent = "*يرجى ملء جميع البيانات.";
-                    }
-                }
-            } else if (data.length >= maxRegistrations) {
-                userForm.style.display = "none";
-                a.style.display = "none";
-                a1.style.display = "none";
-                aa.style.display = "none";
-                ab2.style.display = "none";
-                aa2.style.display = "block";
             }
-        } else {
-            ab11.style.display = "none";
+
+            function checkLength1(input, maxLength) {
+                if (input.value.length > maxLength) {
+                    input.value = input.value.slice(0, maxLength);
+                }
+            }
+            
+            function isEnglish(text) {
+              return /^[A-Za-z\s]+$/.test(text);
+            }
+            
+            function isEmail(text) {
+              return text.endsWith("@gmail.com");
+            }
+            
+            function startsWith(phone) {
+              return phone.startsWith("010") || phone.startsWith("011") || phone.startsWith("012") || phone.startsWith("015");
+            }
+            
+            function submit() {
+                const name = document.getElementById('name').value;
+                const useremail = document.getElementById('email').value;
+                const id = document.getElementById('id').value;
+                const phone = document.getElementById('phone').value;
+                const imageFile = document.getElementById('image').files[0];
+                const resala = document.getElementById('resala');
+                resala.innerHTML = ''; // مسح المحتوى الحالى
+                
+                const isDuplicate = data.some(item => 
+                    item.useremail === useremail || 
+                    item.id === id || 
+                    item.phone === phone
+                );
+                
+                if (name && useremail && id.length == 14 && phone.length == 11 && imageFile && isDuplicate) {
+                    document.getElementById("errror").textContent = "هذه البيانات بالفعل مسجلة لدينا، وممنوع التسجيل بنفس البيانات اكثر من مرة.";
+                    return;
+                }
+
+                if (name && useremail && id.length == 14 && phone.length == 11 && imageFile) {
+                  if (!isEnglish(name)) {
+                    document.getElementById("errror").textContent = "يجب كتابة الاسم باللغة الإنجليزية فقط (بدون أحرف عربية أو رموز).";
+                    return;
+                  }
+                  if (!isEmail(useremail)) {
+                    document.getElementById("errror").textContent = "يجب ان تنتهى صيغة الاميل ب (@gmail.com)";
+                    return;
+                  }
+                  if (!startsWith(phone)) {
+                    document.getElementById("errror").textContent = "يجب أن يبدأ رقم الهاتف بـ 010 او 011 او 012 او 015.";
+                    return;
+                  }
+                  
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const imageUrl = e.target.result;
+
+                        const barcodeData = `Email: ${useremail}, Name: ${name}, ID: ${id}, Phone: ${phone}`;
+                        const barcodeDiv = document.getElementById('barcode');
+                        barcodeDiv.innerHTML = '';
+                        new QRCode(barcodeDiv, {
+                            text: barcodeData,
+                            width: 100,
+                            height: 100,
+                            colorDark: "#4361ee",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+
+                        const barcodeImg = barcodeDiv.querySelector('img').src;
+                        const timeTasgel = new Date().toLocaleString();
+                        const a = -1;
+                        tasgel += 1;
+                        localStorage.setItem('tasgel', JSON.stringify(tasgel));
+                        const data = JSON.parse(localStorage.getItem('data') || '[]');
+                        data.push({ tasgel, timeTasgel, useremail, name, id, phone, imageUrl, barcodeImg, a });
+                        const userData = data.find(item => item.tasgel === tasgel);
+                        const rowIndex = data.indexOf(userData) + 1; // إضافة 1 لأن الفهرس يبدأ من الصفر
+                        localStorage.setItem('data', JSON.stringify(data));
+                        
+                        // Show success notification
+                        showNotification('تم حفظ بياناتك بنجاح!', 'success');
+                        
+                        errror.style.display = "none";
+                        errror1.style.display = "none";
+                        
+                        data.forEach((item, index) => {
+                            const statusMessage = document.createElement('div');
+                            statusMessage.classList.add('status-message');
+
+                            if (item.a === -1) {
+                                statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+                                statusMessage.classList.add('pending');
+                            } else if (item.a === 0) {
+                                statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+                                statusMessage.classList.add('reviewed');
+                            } else if (item.a === 1) {
+                                statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+                                statusMessage.classList.add('urgent');
+                            }
+
+                            resala.appendChild(statusMessage);
+                        });
+                        
+                        document.getElementById("userForm").style.display = "none";
+                        document.getElementById("a").style.display = "none";
+                        document.getElementById("aa").style.display = "none";
+                        document.getElementById("aa1").style.display = "flex";
+                        document.getElementById("aa3").style.display = "flex";
+                        document.getElementById("a1").style.display = "flex";
+                        document.getElementById("ab1").style.display = "flex";
+                        document.getElementById("numberintasgel").value = rowIndex;
+                        document.getElementById("email1").value = useremail;
+                        document.getElementById("image1").src = imageUrl;
+                        document.getElementById("name1").value = name;
+                        document.getElementById("id1").value = id;
+                        document.getElementById("phone1").value = phone;
+                        document.getElementById("resala").value = a;
+                        
+                        // إعادة تعيين النموذج
+                        document.getElementById('userForm').reset();
+                    };
+                    reader.readAsDataURL(imageFile);
+                } else {
+                  document.getElementById("errror").textContent = "*يرجى ملء جميع البيانات بشكل صحيح.";
+                }
+            }
+        } else if (data.length >= maxRegistrations) {
             userForm.style.display = "none";
             a.style.display = "none";
             a1.style.display = "none";
             aa.style.display = "none";
-            aa2.style.display = "none";
             ab2.style.display = "none";
-            aa4.style.display = "block";
+            aa2.style.display = "block";
         }
+    } else {
+        ab11.style.display = "none";
+        userForm.style.display = "none";
+        a.style.display = "none";
+        a1.style.display = "none";
+        aa.style.display = "none";
+        aa2.style.display = "none";
+        ab2.style.display = "none";
+        aa4.style.display = "block";
+    }
 
-        // التعديل الأول: تفعيل وظيفة تأكيد عند حذف بيانات التسجيل بناءً على userEmail
-        function deletData() {
-            message1.style.display = 'block';
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+
+    function deletData() {
+        message1.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    function taqed() {
+        const data = JSON.parse(localStorage.getItem('data') || '[]');
+        const specificData = data.find(item => item.tasgel === tasgel);
+        if (specificData) {
+            const index = data.indexOf(specificData);
+            data.splice(index, 1);
+            localStorage.setItem('data', JSON.stringify(data));
+            showNotification('تم حذف بياناتك بنجاح!', 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+    }
+
+    function editData() {
+        const userData = data.find(item => item.tasgel === tasgel);
+        if (userData) {
+            document.getElementById("nameedit").value = userData.name;
+            document.getElementById("emailedit").value = userData.useremail;
+            document.getElementById("idedit").value = userData.id;
+            document.getElementById("phoneedit").value = userData.phone;
+            document.getElementById("imageedit").src = userData.imageUrl;
+            message.style.display = 'block';
             overlay.style.display = 'block';
         }
-
-        function taqed() {
-            const data = JSON.parse(localStorage.getItem('data') || '[]');
-            const specificData = data.find(item => item.tasgel === tasgel);
-            if (specificData) {
-                const index = data.indexOf(specificData);
-                data.splice(index, 1);
-                localStorage.setItem('data', JSON.stringify(data));
-                alert('تم حذف بياناتك بنجاح!');
-                location.reload();
-            }
-        }
-
-        // التعديل الثاني: تفعيل خاصية تعديل البيانات وحفظ التعديلات مع تغيير كل البيانات والباركود
-        function editData() {
-            const userData = data.find(item => item.tasgel === tasgel);
-            if (userData) {
-                document.getElementById("nameedit").value = userData.name;
-                document.getElementById("emailedit").value = userData.useremail;
-                document.getElementById("idedit").value = userData.id;
-                document.getElementById("phoneedit").value = userData.phone;
-                document.getElementById("imageedit").src = userData.imageUrl;
-                message.style.display = 'block';
-                overlay.style.display = 'block';
-            }
-        }
-
-        function saveData() {
-            const nameedit = document.getElementById('nameedit').value;
-            const emailedit = document.getElementById('emailedit').value;
-            const idedit = document.getElementById('idedit').value;
-            const phoneedit = document.getElementById('phoneedit').value;
-            const imageFile = document.getElementById('imageedit').files[0];
-            const resala = document.getElementById('resala');
-            
-            const isDuplicate = data.some(item => 
-                (item.useremail === emailedit || 
-                item.id === idedit || 
-                item.phone === phoneedit) && 
-                item.tasgel !== tasgel
-            );
-
-            if (nameedit && emailedit && idedit.length == 14 && phoneedit.length == 11 && imageFile && isDuplicate) {
-                document.getElementById("errror1").textContent = "هذه البيانات بالفعل مسجلة لدينا، وممنوع التسجيل بنفس البيانات اكثر من مرة.";
-                return;
-            }
-
-            if (nameedit && emailedit && idedit.length == 14 && phoneedit.length == 11 && imageFile) {
-if (!isEnglish(nameedit)) {
-        document.getElementById("errror1").textContent = "يجب كتابة الاسم باللغة الإنجليزية فقط (بدون أحرف عربية أو رموز).";
-        return;
     }
-    
-    // التحقق من أن رقم الهاتف يبدأ بـ 010
-    if (!startsWith010(phoneedit)) {
-        document.getElementById("errror1").textContent = "يجب أن يبدأ رقم الهاتف بـ 010.";
-        return;
-    }
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const imageUrl = e.target.result;
 
-                    const barcodeData = `Email: ${emailedit}, Name: ${nameedit}, ID: ${idedit}, Phone: ${phoneedit}`;
-                    const barcodeDiv = document.getElementById('barcode');
-                    barcodeDiv.innerHTML = '';
-                    new QRCode(barcodeDiv, {
-                        text: barcodeData,
-                        width: 128,
-                        height: 128
-                    });
+    function saveData() {
+        const nameedit = document.getElementById('nameedit').value;
+        const emailedit = document.getElementById('emailedit').value;
+        const idedit = document.getElementById('idedit').value;
+        const phoneedit = document.getElementById('phoneedit').value;
+        const imageFile = document.getElementById('imageedit').files[0];
+        const resala = document.getElementById('resala');
+        
+        const isDuplicate = data.some(item => 
+            (item.useremail === emailedit || 
+            item.id === idedit || 
+            item.phone === phoneedit) && 
+            item.tasgel !== tasgel
+        );
 
-                    const barcodeImg = barcodeDiv.querySelector('img').src;
-
-                    const userData = data.find(item => item.tasgel === tasgel);
-                    if (userData) {
-                        userData.name = nameedit;
-                        userData.useremail = emailedit;
-                        userData.id = idedit;
-                        userData.phone = phoneedit;
-                        userData.imageUrl = imageUrl;
-                        userData.a = -1;
-                        userData.barcodeImg = barcodeImg;
-                        localStorage.setItem('data', JSON.stringify(data));
-                        alert('تم تعديل بياناتك بنجاح!');
-                        resala.innerHTML = ''; // مسح المحتوى الحالى
-            data.forEach((item, index) => {
-                const statusMessage = document.createElement('div');
-                statusMessage.classList.add('status-message');
-
-                if (item.a === -1) {
-                    statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
-                    statusMessage.classList.add('pending'); // لون أصفر
-                } else if (item.a === 0) {
-                    statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
-                    statusMessage.classList.add('reviewed'); // لون أخضر
-                } else if (item.a === 1) {
-                    statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
-                    statusMessage.classList.add('urgent'); // لون أحمر
-                }
-
-                resala.appendChild(statusMessage);
-            });
-                        document.getElementById("image1").src = imageUrl;
-                        document.getElementById("email1").value = emailedit;
-                        document.getElementById("name1").value = nameedit;
-                        document.getElementById("id1").value = idedit;
-                        document.getElementById("phone1").value = phoneedit;
-                        message.style.display = 'none';
-                        overlay.style.display = 'none';
-                    }
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-               document.getElementById("errror1").textContent = "*يرجى ملء جميع البيانات.";
-            }
+        if (nameedit && emailedit && idedit.length == 14 && phoneedit.length == 11 && imageFile && isDuplicate) {
+            document.getElementById("errror1").textContent = "هذه البيانات بالفعل مسجلة لدينا، وممنوع التسجيل بنفس البيانات اكثر من مرة.";
+            return;
         }
 
-        // التعديل الثالث: عرض بيانات التسجيل إذا كان userEmail مسجل مسبقًا
-        function loadUserData() {
-            const userData = data.find(item => item.tasgel === tasgel);
-            if (userData) {
-                document.getElementById("userForm").style.display = "none";
-                document.getElementById("a").style.display = "none";
-                document.getElementById("aa").style.display = "none";
-                document.getElementById("aa2").style.display = "none";
-                document.getElementById("aa4").style.display = "none";
-                document.getElementById("aa1").style.display = "flex";
-                document.getElementById("aa3").style.display = "flex";
-                document.getElementById("a1").style.display = "flex";
-                document.getElementById("ab1").style.display = "flex";
-                document.getElementById("ab2").style.display = "block";
-                const rowIndex = data.indexOf(userData) + 1; // إضافة 1 لأن الفهرس يبدأ من الصفر
-                document.getElementById("numberintasgel").value = rowIndex;
-                document.getElementById("email1").value = userData.useremail;
-                document.getElementById("image1").src = userData.imageUrl;
-                document.getElementById("name1").value = userData.name;9
-                document.getElementById("id1").value = userData.id;
-                document.getElementById("phone1").value = userData.phone;
-                document.getElementById("resala").value = userData.a;
+        if (nameedit && emailedit && idedit.length == 14 && phoneedit.length == 11 && imageFile) {
+                  if (!isEnglish(nameedit)) {
+                    document.getElementById("errror1").textContent = "يجب كتابة الاسم باللغة الإنجليزية فقط (بدون أحرف عربية أو رموز).";
+                    return;
+                  }
+                  if (!isEmail(emailedit)) {
+                    document.getElementById("errror1").textContent = "يجب ان تنتهى صيغة الاميل ب (@gmail.com)";
+                    return;
+                  }
+                  if (!startsWith(phoneedit)) {
+                    document.getElementById("errror1").textContent = "يجب أن يبدأ رقم الهاتف بـ 010 او 011 او 012 او 015.";
+                    return;
+                  }
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageUrl = e.target.result;
+
+                const barcodeData = `Email: ${emailedit}, Name: ${nameedit}, ID: ${idedit}, Phone: ${phoneedit}`;
                 const barcodeDiv = document.getElementById('barcode');
                 barcodeDiv.innerHTML = '';
                 new QRCode(barcodeDiv, {
-                    text: `Email: ${userData.useremail}, Name: ${userData.name}, ID: ${userData.id}, Phone: ${userData.phone}`,
-                    width: 120,
-                    height: 120
+                    text: barcodeData,
+                    width: 100,
+                    height: 100,
+                    colorDark: "#4361ee",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
                 });
+
+                const barcodeImg = barcodeDiv.querySelector('img').src;
+
+                const userData = data.find(item => item.tasgel === tasgel);
+                if (userData) {
+                    userData.name = nameedit;
+                    userData.useremail = emailedit;
+                    userData.id = idedit;
+                    userData.phone = phoneedit;
+                    userData.imageUrl = imageUrl;
+                    userData.a = -1;
+                    userData.barcodeImg = barcodeImg;
+                    localStorage.setItem('data', JSON.stringify(data));
+                    showNotification('تم تعديل بياناتك بنجاح!', 'success');
+                    
+                    resala.innerHTML = '';
+                    data.forEach((item, index) => {
+                        const statusMessage = document.createElement('div');
+                        statusMessage.classList.add('status-message');
+
+                        if (item.a === -1) {
+                            statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+                            statusMessage.classList.add('pending');
+                        } else if (item.a === 0) {
+                            statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+                            statusMessage.classList.add('reviewed');
+                        } else if (item.a === 1) {
+                            statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+                            statusMessage.classList.add('urgent');
+                        }
+
+                        resala.appendChild(statusMessage);
+                    });
+                    
+                    document.getElementById("image1").src = imageUrl;
+                    document.getElementById("email1").value = emailedit;
+                    document.getElementById("name1").value = nameedit;
+                    document.getElementById("id1").value = idedit;
+                    document.getElementById("phone1").value = phoneedit;
+                    
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                        overlay.style.display = 'none';
+                    }, 1500);
+                }
+            };
+            reader.readAsDataURL(imageFile);
+        } else {
+           document.getElementById("errror1").textContent = "*يرجى ملء جميع البيانات بشكل صحيح.";
+        }
+    }
+
+    function loadUserData() {
+        const userData = data.find(item => item.tasgel === tasgel);
+        if (userData) {
+            document.getElementById("userForm").style.display = "none";
+            document.getElementById("a").style.display = "none";
+            document.getElementById("aa").style.display = "none";
+            document.getElementById("aa2").style.display = "none";
+            document.getElementById("aa4").style.display = "none";
+            document.getElementById("aa1").style.display = "flex";
+            document.getElementById("aa3").style.display = "flex";
+            document.getElementById("a1").style.display = "flex";
+            document.getElementById("ab1").style.display = "flex";
+            document.getElementById("ab2").style.display = "block";
+            const rowIndex = data.indexOf(userData) + 1; // إضافة 1 لأن الفهرس يبدأ من الصفر
+            document.getElementById("numberintasgel").value = rowIndex;
+            document.getElementById("email1").value = userData.useremail;
+            document.getElementById("image1").src = userData.imageUrl;
+            document.getElementById("name1").value = userData.name;
+            document.getElementById("id1").value = userData.id;
+            document.getElementById("phone1").value = userData.phone;
+            document.getElementById("resala").value = userData.a;
+            const barcodeDiv = document.getElementById('barcode');
+            barcodeDiv.innerHTML = '';
+            new QRCode(barcodeDiv, {
+                text: `Email: ${userData.useremail}, Name: ${userData.name}, ID: ${userData.id}, Phone: ${userData.phone}`,
+                width: 100,
+                height: 100,
+                colorDark: "#4361ee",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+    }
+
+    loadUserData();
+
+    function Close() {
+        message.style.display = 'none';
+        message1.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+    
+    const resala = document.getElementById('resala');
+    resala.innerHTML = '';
+    
+    data.forEach((item, index) => {
+        const statusMessage = document.createElement('div');
+        statusMessage.classList.add('status-message');
+
+        if (item.a === -1) {
+            statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+            statusMessage.classList.add('pending');
+        } else if (item.a === 0) {
+            statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+            statusMessage.classList.add('reviewed');
+        } else if (item.a === 1) {
+            statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+            statusMessage.classList.add('urgent');
+        }
+
+        resala.appendChild(statusMessage);
+    });
+    
+    const table = document.getElementById('table');
+    const tableContainer = document.getElementById('a1');
+
+    function checkTableOverflow() {
+      if (table.offsetWidth > tableContainer.offsetWidth) {
+        showNotification('لتحسين العرض، يرجى تفعيل خاصية التدوير التلقائي أو استخدام جهاز بشاشة أكبر', 'warning');
+      }
+    }
+
+    checkTableOverflow();
+
+    window.addEventListener('resize', checkTableOverflow);
+    
+    // Add notification styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تسجيل الحضور</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --danger-color: #f72585;
+            --success-color: #4cc9f0;
+            --warning-color: #f8961e;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+            direction: rtl;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark-color);
+        }
+        
+        #total {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #total::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+        }
+        
+        #total h1, #total h3 {
+            margin: 15px 0;
+            color: var(--primary-color);
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            width: 90%;
+            max-width: 600px;
+            padding: 0;
+            border-radius: var(--border-radius);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
             }
         }
-
-        loadUserData();
-
-        function Close() {
-            message.style.display = 'none';
-            message1.style.display = 'none';
-            overlay.style.display = 'none';
+        
+        .modal h2 {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            padding: 20px;
+            margin: 0;
+            font-size: 1.5rem;
         }
-            const resala = document.getElementById('resala');
-            resala.innerHTML = ''; // مسح المحتوى الحالي
+        
+        .modal-content {
+            padding: 20px;
+        }
+        
+        #userForm, #a1 {
+            width: 100%;
+            margin: 20px auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        tr:hover td {
+            background-color: #f5f5f5;
+        }
+        
+        input[type="text"], 
+        input[type="number"], 
+        input[type="email"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input[type="text"]:focus, 
+        input[type="number"]:focus, 
+        input[type="email"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+        }
+        
+        input[type="button"], 
+        input[type="button"]:read-only {
+            width: 100%;
+            padding: 12px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+            cursor: default;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            margin: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d1145a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .status-message {
+            font-size: 1.1rem;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-message.pending {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .status-message.reviewed {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .status-message.urgent {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            margin: 10px 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .amr {
+            user-select: none;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .responsive-table {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .responsive-table::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .responsive-table::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            #total {
+                padding: 20px 15px;
+            }
+            
+            th, td {
+                padding: 10px 5px;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .modal {
+                width: 95%;
+            }
+        }
+        
+        /* Animation for form elements */
+        .form-group {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Floating animation for buttons */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .btn-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Pulse animation for important elements */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+<div id="total">
+    <h1 id="aa">تسجيل البيانات</h1>
+    <h1 id="aa1">تذكرة الدخول</h1>
+    <h3 id="aa3">*يجب عليك الاحتفاظ بهذه التذكرة حتى تستطيع دخول القاعة.</h3>
+    <h1 id="aa2">تم غلق التسجيل لإكتمال العدد</h1>
+    <h1 id="aa4">التسجيل مغلق الان</h1>
+    
+    <div id="userForm">
+      <div class="responsive-table">
+        <table>
+          <thead>
+            <tr class="form-group">
+              <th>الاسم كامل باللغة الانجليزية:</th>
+              <th><input type="text" id="name" placeholder="الاسم كامل باللغة الانجليزية" required></th>
+            </tr>
+            <tr class="form-group">
+              <th>إيميل جوجل:</th>
+              <th><input type="text" id="email" placeholder="إيميل جوجل" required></th>
+            </tr>
+            <tr class="form-group">
+              <th>الرقم القومى المكون من 14 رقم:</th>
+              <th><input type="number" id="id" placeholder="الرقم القومى المكون من 14 رقم" oninput="checkLength(this, 14)" required></th>
+            </tr>
+            <tr class="form-group">
+              <th>رقم الموبايل:</th>
+              <th><input type="number" id="phone" placeholder="رقم الموبايل" oninput="checkLength1(this, 11)" required></th>
+            </tr>
+            <tr class="form-group">
+              <th>صورة شخصية:</th>
+              <th><input type="file" id="image" accept="image/*" required></th>
+            </tr>
+            <tr>
+              <th colspan="2" style="font-weight: normal; font-size: 0.9rem; color: #6c757d;">
+                *الصورة الشخصية يجب ان يكون حجمها اقل من 1MB.
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <p id="errror" class="error-message"></p>
+    <button id="a" class="btn btn-primary btn-float" type="submit" onclick="submit()">إرسال</button>
+    
+    <div id="a1">
+      <div class="responsive-table">
+        <table id="table">
+          <thead>
+            <tr>
+              <th>صورة شخصية</th>
+              <th>رقم المقعد</th>
+              <th>البريد الإلكتروني</th>
+              <th>الاسم الكامل</th>
+              <th>الرقم القومي</th>
+              <th>رقم الموبايل</th>
+              <th>الباركود</th>
+            </tr>
+            <tr>
+              <td><img id="image1" src="" alt="صورة شخصية" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;"></td>
+              <td><input type="button" id="numberintasgel" readonly></td>
+              <td><input type="button" id="email1" readonly></td>
+              <td><input type="button" id="name1" readonly></td>
+              <td><input type="button" id="id1" readonly></td>
+              <td><input type="button" id="phone1" readonly></td>
+              <td><div id="barcode"></div></td>
+            </tr>
+            <tr>
+              <th>حالة صحة بياناتك</th>
+              <td colspan="6">
+                <div id="resala"></div>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    
+    <div id="ab2">
+        <h3 style="color: #6c757d; font-weight: normal; line-height: 1.6;">
+          *سيتم مراجعة تسجيلك، إذا تم قبوله سيظهر لك رسالة التأكيد هنا، وإذا تم رفضه سيظهر لك رسالة الرفض هنا وسيتم منحك وقت لتعديل بياناتك وإلا سيتم حذف تسجيلك.
+        </h3>
+    </div>
+    
+    <div id="ab1" style="display: flex; justify-content: center; flex-wrap: wrap;">
+        <button id="ab11" class="btn btn-primary" onclick="editData()">تعديل بياناتك</button>
+        <button id="ab12" class="btn btn-danger" onclick="deletData()">حذف تسجيلك</button>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div id="message" class="modal">
+      <h2>تعديل بياناتك</h2>
+      <div class="modal-content">
+        <div class="responsive-table">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم كامل باللغة الانجليزية</th>
+                <th><input type="text" id="nameedit" placeholder="الاسم كامل باللغة الانجليزية" required></th>
+              </tr>
+              <tr>
+                <th>إيميل جوجل:</th>
+                <th><input type="text" id="emailedit" placeholder="إيميل جوجل" required></th>
+              </tr>
+              <tr>
+                <th>الرقم القومى المكون من 14 رقم</th>
+                <th><input type="number" id="idedit" placeholder="الرقم القومى المكون من 14 رقم" oninput="checkLength(this, 14)" required></th>
+              </tr>
+              <tr>
+                <th>رقم الموبايل</th>
+                <th><input type="number" id="phoneedit" placeholder="رقم الموبايل" oninput="checkLength1(this, 11)" required></th>
+              </tr>
+              <tr>
+                <th>صورة شخصية</th>
+                <th><input type="file" id="imageedit" accept="image/*" required></th>
+              </tr>
+              <tr>
+                <th colspan="2" style="font-weight: normal; font-size: 0.9rem; color: #6c757d;">
+                  *الصورة الشخصية يجب ان يكون حجمها اقل من 1MB.
+                </th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <p id="errror1" class="error-message"></p>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button id="abc" class="btn btn-primary" onclick="saveData()">حفظ التعديلات</button>
+          <button id="close" class="btn btn-secondary" onclick="Close()">الغاء</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="message1" class="modal">
+      <h2>رسالة تأكيد حذف بياناتك</h2>
+      <div class="modal-content">
+        <h3 style="margin-bottom: 30px; color: var(--dark-color);">هل انت متأكد من أنك تريد حذف بياناتك؟</h3>
+        <div style="display: flex; justify-content: center;">
+          <button id="abc1" class="btn btn-danger" onclick="taqed()">تأكيد</button>
+          <button id="close1" class="btn btn-secondary" onclick="Close()">الغاء</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    <div class="amr" dir="rtl">
+      <p>#المهندس_عمرو_بن_الشيخ_مروان</p>
+    </div>
+</div>
 
-            data.forEach((item, index) => {
-                const statusMessage = document.createElement('div');
-                statusMessage.classList.add('status-message');
+<script>
+    const data = JSON.parse(localStorage.getItem('data') || '[]');
+    let tasgel = JSON.parse(localStorage.getItem('tasgel')) || 0;
+    const maxRegistrations = JSON.parse(localStorage.getItem('maxRegistrations') || '[]');
+    
+    if (maxRegistrations != "") {
+        if (data.length < maxRegistrations) {
+            function checkLength(input, maxLength) {
+                if (input.value.length > maxLength) {
+                    input.value = input.value.slice(0, maxLength);
+                }
+            }
 
-                if (item.a === -1) {
-                    statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
-                    statusMessage.classList.add('pending'); // لون أصفر
-                } else if (item.a === 0) {
-                    statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
-                    statusMessage.classList.add('reviewed'); // لون أخضر
-                } else if (item.a === 1) {
-                    statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
-                    statusMessage.classList.add('urgent'); // لون أحمر
+            function checkLength1(input, maxLength) {
+                if (input.value.length > maxLength) {
+                    input.value = input.value.slice(0, maxLength);
+                }
+            }
+            
+            function isEnglish(text) {
+              return /^[A-Za-z\s]+$/.test(text);
+            }
+            
+            function isEmail(text) {
+              return text.endsWith("@gmail.com");
+            }
+            
+            function startsWith(phone) {
+              return phone.startsWith("010") || phone.startsWith("011") || phone.startsWith("012") || phone.startsWith("015");
+            }
+            
+            function submit() {
+                const name = document.getElementById('name').value;
+                const useremail = document.getElementById('email').value;
+                const id = document.getElementById('id').value;
+                const phone = document.getElementById('phone').value;
+                const imageFile = document.getElementById('image').files[0];
+                const resala = document.getElementById('resala');
+                resala.innerHTML = ''; // مسح المحتوى الحالى
+                
+                const isDuplicate = data.some(item => 
+                    item.useremail === useremail || 
+                    item.id === id || 
+                    item.phone === phone
+                );
+                
+                if (name && useremail && id.length == 14 && phone.length == 11 && imageFile && isDuplicate) {
+                    document.getElementById("errror").textContent = "هذه البيانات بالفعل مسجلة لدينا، وممنوع التسجيل بنفس البيانات اكثر من مرة.";
+                    return;
                 }
 
-                resala.appendChild(statusMessage);
+                if (name && useremail && id.length == 14 && phone.length == 11 && imageFile) {
+                  if (!isEnglish(name)) {
+                    document.getElementById("errror").textContent = "يجب كتابة الاسم باللغة الإنجليزية فقط (بدون أحرف عربية أو رموز).";
+                    return;
+                  }
+                  if (!isEmail(useremail)) {
+                    document.getElementById("errror").textContent = "يجب ان تنتهى صيغة الاميل ب (@gmail.com)";
+                    return;
+                  }
+                  if (!startsWith(phone)) {
+                    document.getElementById("errror").textContent = "يجب أن يبدأ رقم الهاتف بـ 010 او 011 او 012 او 015.";
+                    return;
+                  }
+                  
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const imageUrl = e.target.result;
+
+                        const barcodeData = `Email: ${useremail}, Name: ${name}, ID: ${id}, Phone: ${phone}`;
+                        const barcodeDiv = document.getElementById('barcode');
+                        barcodeDiv.innerHTML = '';
+                        new QRCode(barcodeDiv, {
+                            text: barcodeData,
+                            width: 100,
+                            height: 100,
+                            colorDark: "#4361ee",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+
+                        const barcodeImg = barcodeDiv.querySelector('img').src;
+                        const timeTasgel = new Date().toLocaleString();
+                        const a = -1;
+                        tasgel += 1;
+                        localStorage.setItem('tasgel', JSON.stringify(tasgel));
+                        const data = JSON.parse(localStorage.getItem('data') || '[]');
+                        data.push({ tasgel, timeTasgel, useremail, name, id, phone, imageUrl, barcodeImg, a });
+                        const userData = data.find(item => item.tasgel === tasgel);
+                        const rowIndex = data.indexOf(userData) + 1; // إضافة 1 لأن الفهرس يبدأ من الصفر
+                        localStorage.setItem('data', JSON.stringify(data));
+                        
+                        // Show success notification
+                        showNotification('تم حفظ بياناتك بنجاح!', 'success');
+                        
+                        errror.style.display = "none";
+                        errror1.style.display = "none";
+                        
+                        data.forEach((item, index) => {
+                            const statusMessage = document.createElement('div');
+                            statusMessage.classList.add('status-message');
+
+                            if (item.a === -1) {
+                                statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+                                statusMessage.classList.add('pending');
+                            } else if (item.a === 0) {
+                                statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+                                statusMessage.classList.add('reviewed');
+                            } else if (item.a === 1) {
+                                statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+                                statusMessage.classList.add('urgent');
+                            }
+
+                            resala.appendChild(statusMessage);
+                        });
+                        
+                        document.getElementById("userForm").style.display = "none";
+                        document.getElementById("a").style.display = "none";
+                        document.getElementById("aa").style.display = "none";
+                        document.getElementById("aa1").style.display = "flex";
+                        document.getElementById("aa3").style.display = "flex";
+                        document.getElementById("a1").style.display = "flex";
+                        document.getElementById("ab1").style.display = "flex";
+                        document.getElementById("numberintasgel").value = rowIndex;
+                        document.getElementById("email1").value = useremail;
+                        document.getElementById("image1").src = imageUrl;
+                        document.getElementById("name1").value = name;
+                        document.getElementById("id1").value = id;
+                        document.getElementById("phone1").value = phone;
+                        document.getElementById("resala").value = a;
+                        
+                        // إعادة تعيين النموذج
+                        document.getElementById('userForm').reset();
+                    };
+                    reader.readAsDataURL(imageFile);
+                } else {
+                  document.getElementById("errror").textContent = "*يرجى ملء جميع البيانات بشكل صحيح.";
+                }
+            }
+        } else if (data.length >= maxRegistrations) {
+            userForm.style.display = "none";
+            a.style.display = "none";
+            a1.style.display = "none";
+            aa.style.display = "none";
+            ab2.style.display = "none";
+            aa2.style.display = "block";
+        }
+    } else {
+        ab11.style.display = "none";
+        userForm.style.display = "none";
+        a.style.display = "none";
+        a1.style.display = "none";
+        aa.style.display = "none";
+        aa2.style.display = "none";
+        ab2.style.display = "none";
+        aa4.style.display = "block";
+    }
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+
+    function deletData() {
+        message1.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    function taqed() {
+        const data = JSON.parse(localStorage.getItem('data') || '[]');
+        const specificData = data.find(item => item.tasgel === tasgel);
+        if (specificData) {
+            const index = data.indexOf(specificData);
+            data.splice(index, 1);
+            localStorage.setItem('data', JSON.stringify(data));
+            showNotification('تم حذف بياناتك بنجاح!', 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+    }
+
+    function editData() {
+        const userData = data.find(item => item.tasgel === tasgel);
+        if (userData) {
+            document.getElementById("nameedit").value = userData.name;
+            document.getElementById("emailedit").value = userData.useremail;
+            document.getElementById("idedit").value = userData.id;
+            document.getElementById("phoneedit").value = userData.phone;
+            document.getElementById("imageedit").src = userData.imageUrl;
+            message.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+    }
+
+    function saveData() {
+        const nameedit = document.getElementById('nameedit').value;
+        const emailedit = document.getElementById('emailedit').value;
+        const idedit = document.getElementById('idedit').value;
+        const phoneedit = document.getElementById('phoneedit').value;
+        const imageFile = document.getElementById('imageedit').files[0];
+        const resala = document.getElementById('resala');
+        
+        const isDuplicate = data.some(item => 
+            (item.useremail === emailedit || 
+            item.id === idedit || 
+            item.phone === phoneedit) && 
+            item.tasgel !== tasgel
+        );
+
+        if (nameedit && emailedit && idedit.length == 14 && phoneedit.length == 11 && imageFile && isDuplicate) {
+            document.getElementById("errror1").textContent = "هذه البيانات بالفعل مسجلة لدينا، وممنوع التسجيل بنفس البيانات اكثر من مرة.";
+            return;
+        }
+
+        if (nameedit && emailedit && idedit.length == 14 && phoneedit.length == 11 && imageFile) {
+                  if (!isEnglish(nameedit)) {
+                    document.getElementById("errror1").textContent = "يجب كتابة الاسم باللغة الإنجليزية فقط (بدون أحرف عربية أو رموز).";
+                    return;
+                  }
+                  if (!isEmail(emailedit)) {
+                    document.getElementById("errror1").textContent = "يجب ان تنتهى صيغة الاميل ب (@gmail.com)";
+                    return;
+                  }
+                  if (!startsWith(phoneedit)) {
+                    document.getElementById("errror1").textContent = "يجب أن يبدأ رقم الهاتف بـ 010 او 011 او 012 او 015.";
+                    return;
+                  }
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageUrl = e.target.result;
+
+                const barcodeData = `Email: ${emailedit}, Name: ${nameedit}, ID: ${idedit}, Phone: ${phoneedit}`;
+                const barcodeDiv = document.getElementById('barcode');
+                barcodeDiv.innerHTML = '';
+                new QRCode(barcodeDiv, {
+                    text: barcodeData,
+                    width: 100,
+                    height: 100,
+                    colorDark: "#4361ee",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                const barcodeImg = barcodeDiv.querySelector('img').src;
+
+                const userData = data.find(item => item.tasgel === tasgel);
+                if (userData) {
+                    userData.name = nameedit;
+                    userData.useremail = emailedit;
+                    userData.id = idedit;
+                    userData.phone = phoneedit;
+                    userData.imageUrl = imageUrl;
+                    userData.a = -1;
+                    userData.barcodeImg = barcodeImg;
+                    localStorage.setItem('data', JSON.stringify(data));
+                    showNotification('تم تعديل بياناتك بنجاح!', 'success');
+                    
+                    resala.innerHTML = '';
+                    data.forEach((item, index) => {
+                        const statusMessage = document.createElement('div');
+                        statusMessage.classList.add('status-message');
+
+                        if (item.a === -1) {
+                            statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+                            statusMessage.classList.add('pending');
+                        } else if (item.a === 0) {
+                            statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+                            statusMessage.classList.add('reviewed');
+                        } else if (item.a === 1) {
+                            statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+                            statusMessage.classList.add('urgent');
+                        }
+
+                        resala.appendChild(statusMessage);
+                    });
+                    
+                    document.getElementById("image1").src = imageUrl;
+                    document.getElementById("email1").value = emailedit;
+                    document.getElementById("name1").value = nameedit;
+                    document.getElementById("id1").value = idedit;
+                    document.getElementById("phone1").value = phoneedit;
+                    
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                        overlay.style.display = 'none';
+                    }, 1500);
+                }
+            };
+            reader.readAsDataURL(imageFile);
+        } else {
+           document.getElementById("errror1").textContent = "*يرجى ملء جميع البيانات بشكل صحيح.";
+        }
+    }
+
+    function loadUserData() {
+        const userData = data.find(item => item.tasgel === tasgel);
+        if (userData) {
+            document.getElementById("userForm").style.display = "none";
+            document.getElementById("a").style.display = "none";
+            document.getElementById("aa").style.display = "none";
+            document.getElementById("aa2").style.display = "none";
+            document.getElementById("aa4").style.display = "none";
+            document.getElementById("aa1").style.display = "flex";
+            document.getElementById("aa3").style.display = "flex";
+            document.getElementById("a1").style.display = "flex";
+            document.getElementById("ab1").style.display = "flex";
+            document.getElementById("ab2").style.display = "block";
+            const rowIndex = data.indexOf(userData) + 1; // إضافة 1 لأن الفهرس يبدأ من الصفر
+            document.getElementById("numberintasgel").value = rowIndex;
+            document.getElementById("email1").value = userData.useremail;
+            document.getElementById("image1").src = userData.imageUrl;
+            document.getElementById("name1").value = userData.name;
+            document.getElementById("id1").value = userData.id;
+            document.getElementById("phone1").value = userData.phone;
+            document.getElementById("resala").value = userData.a;
+            const barcodeDiv = document.getElementById('barcode');
+            barcodeDiv.innerHTML = '';
+            new QRCode(barcodeDiv, {
+                text: `Email: ${userData.useremail}, Name: ${userData.name}, ID: ${userData.id}, Phone: ${userData.phone}`,
+                width: 100,
+                height: 100,
+                colorDark: "#4361ee",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
-const table = document.getElementById('table');
-const tableContainer = document.getElementById('a1');
+        }
+    }
 
-function checkTableOverflow() {
-  if (table.offsetWidth > tableContainer.offsetWidth) {
-    alert('يوجد صعوبة فى ظهور الصفحة بشكل كامل فيرجى تفعيل خاصية (التدوير التلقائى) من جهازك وتدوير الشاشة.');
-  }
-}
+    loadUserData();
 
-checkTableOverflow();
+    function Close() {
+        message.style.display = 'none';
+        message1.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+    
+    const resala = document.getElementById('resala');
+    resala.innerHTML = '';
+    
+    data.forEach((item, index) => {
+        const statusMessage = document.createElement('div');
+        statusMessage.classList.add('status-message');
 
-window.addEventListener('resize', checkTableOverflow);
-    </script>
+        if (item.a === -1) {
+            statusMessage.textContent = `جارٍ مراجعة بياناتك...`;
+            statusMessage.classList.add('pending');
+        } else if (item.a === 0) {
+            statusMessage.textContent = `تم مراجعة بياناتك، وتم الموافقة على تسجيلك.`;
+            statusMessage.classList.add('reviewed');
+        } else if (item.a === 1) {
+            statusMessage.textContent = `بياناتك مرفوضة، ويجب تعديل بياناتك في أسرع وقت.`;
+            statusMessage.classList.add('urgent');
+        }
+
+        resala.appendChild(statusMessage);
+    });
+    
+    const table = document.getElementById('table');
+    const tableContainer = document.getElementById('a1');
+
+    function checkTableOverflow() {
+      if (table.offsetWidth > tableContainer.offsetWidth) {
+        showNotification('لتحسين العرض، يرجى تفعيل خاصية التدوير التلقائي أو استخدام جهاز بشاشة أكبر', 'warning');
+      }
+    }
+
+    checkTableOverflow();
+
+    window.addEventListener('resize', checkTableOverflow);
+    
+    // Add notification styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            box-shadow: var(--box-shadow);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1100;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+</body>
+</html>
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            box-shadow: var(--box-shadow);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1100;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+    `;
+    document.head.appendChild(style);
+</script>
 </body>
 </html>
